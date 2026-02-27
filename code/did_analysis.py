@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
 # did_analysis.py — DID Analysis Script
 # Estimates the average treatment effect of turning off eBay's paid search.
@@ -30,6 +30,10 @@ se = np.sqrt(var1 / n1 + var0 / n0)
 # 95% CI
 ci_lower = gamma_hat - 1.96 * se
 ci_upper = gamma_hat + 1.96 * se
+# Exponentiated (levels) results
+gamma_hat_exp = np.exp(gamma_hat)
+ci_lower_exp = np.exp(ci_lower)
+ci_upper_exp = np.exp(ci_upper)
 
 # Print results to console
 print("DID Results (Log Scale)")
@@ -42,17 +46,18 @@ print(f"95% CI: [{ci_lower:.4f}, {ci_upper:.4f}]")
 latex = r"""\begin{table}[h]
 \centering
 \caption{Difference-in-Differences Estimate of the Effect of Paid Search on Revenue}
-\begin{tabular}{lc}
+\begin{tabular}{lcc}
 \hline
-& Log Scale \\
+& Log Scale & Levels (exp) \\
 \hline
-Point Estimate ($\hat{\gamma}$) & $%.4f$ \\
-Standard Error & $%.4f$ \\
-95\%% CI & $[%.4f, \; %.4f]$ \\
+Point Estimate ($\hat{\gamma}$) & $%.4f$ & $%.4f$ \\
+Standard Error & $%.4f$ & --- \\
+95\%% CI & $[%.4f, \; %.4f]$ & $[%.4f, \; %.4f]$ \\
 \hline
 \end{tabular}
 \label{tab:did}
-\end{table}""" % (gamma_hat, se, ci_lower, ci_upper)
+\end{table}""" % (gamma_hat, gamma_hat_exp, se, ci_lower, ci_upper, ci_lower_exp, ci_upper_exp)
+
 
 with open('output/tables/did_table.tex', 'w') as f:
     f.write(latex)
